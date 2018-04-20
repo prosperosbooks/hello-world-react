@@ -1,21 +1,38 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import CardList from "./CardList";
+import { robots } from "./robots";
+import SearchBox from "./SearchBox";
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
-  }
+    constructor() {
+        super();
+        this.state = {
+            robots: robots,
+            searchfield: ""
+        };
+    }
+
+    // we want "searchfield" state to reflect what we type into the searchbox
+    onSearchChange = event => {
+        this.setState({ searchfield: event.target.value });
+    };
+
+
+    render() {
+        const filteredRobots = this.state.robots.filter(robot => {
+            return robot.name
+                .toLocaleLowerCase()
+                .includes(this.state.searchfield.toLocaleLowerCase());
+        });
+
+        return (
+            <div className="tc">
+                <h1>RoboFriends</h1>
+                <SearchBox searchChange={this.onSearchChange} />
+                <CardList robots={filteredRobots} />
+            </div>
+        );
+    }
 }
 
 export default App;
